@@ -1,0 +1,43 @@
+{
+  "title": "Welcome to SpaceLogic!",
+  "description1": "At SpaceLogic, we help simplify your architectural projects. This online platform is designed to support architects and their clients by streamlining communication on all aspects of the project.",
+  "description2": "Join our community now and take advantage of the platform that will transform the way you manage projects!",
+  "featuresTitle": "What We Offer",
+  "features": {
+    "security": {
+      "title": "A secure platform for your architectural projects",
+      "desc": "We prioritize the security of your data."
+    },
+    "simplicity": {
+      "title": "A simple environment to easily find projects by organization",
+      "desc": "An intuitive interface designed for team productivity."
+    },
+    "history": {
+      "title": "Access to change history",
+      "desc": "Track and review every modification made to your projects."
+    },
+    "subscription": {
+      "title": "Subscription plans tailored to your needs",
+      "desc": "Flexible pricing options based on your usage."
+    },
+    "comments": {
+      "title": "Spaces for client feedback on each aspect of the project",
+      "desc": "Collaborate and communicate effectively with clients."
+    }
+  },
+  "whyTitle": "Why Choose SpaceLogic?",
+  "why1": "Practical tools to optimize your work",
+  "why2": "Easier communication with clients",
+  "aboutTitle": "About Us",
+  "aboutText": "We are a team of four undergraduate computer science students from Université Laval.",
+  "team": [
+    "Nora Belattar",
+    "Sébastien Gagnon",
+    "Jessica Leroux"
+  ],
+  "buttons": {
+    "getStarted": "Get Started",
+    "services": "Our Services",
+    "learnMore": "Learn More"
+  }
+}

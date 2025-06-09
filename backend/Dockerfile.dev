@@ -1,0 +1,15 @@
+# Dockerfile.dev pour le backend (développement .NET)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dev
+
+# ✅ Installer dotnet-ef
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+WORKDIR /app
+COPY . .
+
+# (Optionnel mais bon pour les performances)
+RUN dotnet restore
+
+# Lance le serveur en mode développement avec hot reload
+CMD ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]

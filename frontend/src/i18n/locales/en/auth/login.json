@@ -1,0 +1,10 @@
+{
+  "title": "Login",
+  "email": "Email",
+  "password": "Password",
+  "submit": "Sign In",
+  "signupPrompt": "Don't have an account?",
+  "signupLink": "Sign up",
+  "successMessage": "Login successful!",
+  "errorMessage": "Invalid email or password."
+}
