@@ -1,4 +1,3 @@
---Database is already init by Docker
 -- CREATE DATABASE SPACELOGIC_ADMIN_DB;
 
 

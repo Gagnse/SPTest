@@ -3,34 +3,20 @@ services:
     build: ./backend
     ports:
       - "5000:5000"
-    depends_on:
-      - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=db;Database=spacelogic;Username=admin;Password=admin
+    env_file:
+      - .env
 
   frontend:
     build:
       context: ./frontend
       args:
-        # VITE_API_URL: http://localhost:5000
         VITE_API_URL: ${VITE_API_URL}
-        # VITE_API_URL: http://backend:5000
     ports:
       - "3000:80"
     depends_on:
       - backend
-
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: spacelogic
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
   pgadmin:
     image: dpage/pgadmin4
@@ -40,8 +26,3 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:80"
-    depends_on:
-      - db
-
-volumes:
-  pgdata:
