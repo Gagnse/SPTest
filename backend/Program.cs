@@ -1,6 +1,8 @@
+// backend/Program.cs
 using backend.Data;
 using SpaceLogic.Data.Admin;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,31 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDbContext<AdminDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AdminConnection")));
 
+// ➕ JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "your-secret-key-here-make-it-long-and-secure";
+var key = Encoding.ASCII.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+builder.Services.AddAuthorization();
+
 // Enregistre les contrôleurs MVC
 builder.Services.AddControllers();
 
@@ -41,6 +68,10 @@ app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+// ➕ Authentication & Authorization (ordre important!)
+app.UseAuthentication();
+app.UseAuthorization();
+
 // 🔒 Redirection HTTPS désactivée pour l'instant (à réactiver plus tard)
 // app.UseHttpsRedirection();
 
@@ -50,7 +81,7 @@ app.MapGet("/test-admin-db", async (AdminDbContext db) =>
     return Results.Ok($"Il y a {userCount} utilisateur(s) dans la base admin.");
 });
 
-// ➕ Exemple d’API
+// ➕ Exemple d'API
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild",

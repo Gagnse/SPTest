@@ -5,6 +5,7 @@ import Contact from '../pages/Contact';
 import Login from '../pages/auth/Login';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import TermsOfService from '../pages/TermsOfService';
+import ProjectsPage from '../pages/workspace/ProjectsPage';
 
 const publicRoutes = [
   { path: '/', element: <Home /> },
@@ -13,7 +14,9 @@ const publicRoutes = [
   { path: '/contact', element: <Contact /> },
   { path: '/login', element: <Login /> },
   { path: '/privacy', element: <PrivacyPolicy /> },
-  { path: '/terms', element: <TermsOfService />}
+  { path: '/terms', element: <TermsOfService />},
+  { path: '/workspace/projects', element: <ProjectsPage /> },
+  { path: '/projets', element: <ProjectsPage /> } // Français
 ];
 
 export default publicRoutes;
