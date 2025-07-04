@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import WorkspaceLayout from '../../components/WorkspaceLayout';
 import axios from 'axios';
-import '../../styles/workspace.css';
+import '../../styles/Workspace/workspace.css';
 
 interface Project {
   id: string;

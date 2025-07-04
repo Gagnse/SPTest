@@ -6,6 +6,8 @@ using SpaceLogic.Data.Models.Admin;
 using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace backend.Controllers
 {
@@ -79,6 +81,13 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
+                // Log the exception details (consider using ILogger)
+                Console.WriteLine($"Login error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
                 return StatusCode(500, new { success = false, message = "Erreur interne du serveur." });
             }
         }
@@ -118,7 +127,13 @@ namespace backend.Controllers
 
         private string GenerateJwtToken(User user)
         {
-            var jwtKey = _configuration["Jwt:Key"] ?? "your-secret-key-here-make-it-long-and-secure";
+            var jwtKey = _configuration["Jwt:Key"] ?? _configuration["Jwt__Key"] ?? "your-secret-key-here-make-it-long-and-secure-fallback-key-for-development";
+            
+            if (string.IsNullOrEmpty(jwtKey) || jwtKey.Length < 16)
+            {
+                throw new InvalidOperationException("JWT Key must be at least 16 characters long.");
+            }
+            
             var key = Encoding.ASCII.GetBytes(jwtKey);
 
             var tokenDescriptor = new SecurityTokenDescriptor
