@@ -29,6 +29,8 @@ namespace backend.Controllers
         {
             try
             {
+                Console.WriteLine($"Login attempt for email: {request.Email}");
+
                 // Find user by email
                 var user = await _context.Users
                     .Include(u => u.Organization)
@@ -36,18 +38,25 @@ namespace backend.Controllers
 
                 if (user == null)
                 {
+                    Console.WriteLine($"User not found for email: {request.Email}");
                     return Unauthorized(new { success = false, message = "Email ou mot de passe incorrect." });
                 }
 
-                // Verify password (assuming passwords are hashed)
+                Console.WriteLine($"User found: {user.FirstName} {user.LastName}");
+
+                // Verify password - BCrypt comparison
                 if (!VerifyPassword(request.Password, user.Password))
                 {
+                    Console.WriteLine("Password verification failed");
                     return Unauthorized(new { success = false, message = "Email ou mot de passe incorrect." });
                 }
+
+                Console.WriteLine("Password verification successful");
 
                 // Check if user is active
                 if (!user.IsActive)
                 {
+                    Console.WriteLine("User account is inactive");
                     return Unauthorized(new { success = false, message = "Compte désactivé. Contactez votre administrateur." });
                 }
 
@@ -69,7 +78,7 @@ namespace backend.Controllers
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
-                        Role = user.Role,
+                        Role = user.OrgRole,
                         Department = user.Department,
                         Location = user.Location,
                         OrganizationId = user.OrganizationId,
@@ -77,11 +86,12 @@ namespace backend.Controllers
                     }
                 };
 
+                Console.WriteLine("Login successful");
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                // Log the exception details (consider using ILogger)
+                // Log the exception details
                 Console.WriteLine($"Login error: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 if (ex.InnerException != null)
@@ -92,36 +102,63 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPost("logout")]
-        public IActionResult Logout()
+        [HttpPost("verify-token")]
+        public async Task<ActionResult<TokenVerificationResponse>> VerifyToken()
         {
-            // In a real application, you might want to blacklist the token
-            // For now, we'll just return a success response
-            return Ok(new { success = true, message = "Déconnexion réussie" });
+            try
+            {
+                // Get the user ID from the JWT token claims
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { success = false, message = "Token invalide." });
+                }
+
+                // Find the user in database
+                var user = await _context.Users
+                    .Include(u => u.Organization)
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (user == null || !user.IsActive)
+                {
+                    return Unauthorized(new { success = false, message = "Utilisateur introuvable ou inactif." });
+                }
+
+                return Ok(new TokenVerificationResponse
+                {
+                    Success = true,
+                    User = new UserDto
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        Role = user.OrgRole,
+                        Department = user.Department,
+                        Location = user.Location,
+                        OrganizationId = user.OrganizationId,
+                        OrganizationName = user.Organization?.Name
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Token verification error: {ex.Message}");
+                return StatusCode(500, new { success = false, message = "Erreur interne du serveur." });
+            }
         }
 
         private bool VerifyPassword(string password, string hashedPassword)
         {
-            // For development purposes, we'll do a simple comparison
-            // In production, use proper password hashing like BCrypt
-            // This is a placeholder - replace with actual password verification
-            
-            // Simple hash for demo (replace with proper hashing)
-            var hashedInput = ComputeSha256Hash(password);
-            return hashedInput == hashedPassword || password == hashedPassword;
-        }
-
-        private string ComputeSha256Hash(string rawData)
-        {
-            using (SHA256 sha256Hash = SHA256.Create())
+            try
             {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
+                // Your password appears to be BCrypt hashed (starts with $2b$12$)
+                return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Password verification error: {ex.Message}");
+                return false;
             }
         }
 
@@ -144,7 +181,7 @@ namespace backend.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                     new Claim("OrganizationId", user.OrganizationId.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role ?? "User")
+                    new Claim(ClaimTypes.Role, user.OrgRole ?? "User")
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -168,6 +205,12 @@ namespace backend.Controllers
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
         public string? Token { get; set; }
+        public UserDto? User { get; set; }
+    }
+
+    public class TokenVerificationResponse
+    {
+        public bool Success { get; set; }
         public UserDto? User { get; set; }
     }
 
