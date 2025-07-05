@@ -15,7 +15,7 @@ const publicRoutes = [
   { path: '/login', element: <Login /> },
   { path: '/privacy', element: <PrivacyPolicy /> },
   { path: '/terms', element: <TermsOfService />},
-  { path: '/workspace/projects', element: <ProjectsPage /> },
+  { path: '/workspace/myprojects', element: <ProjectsPage /> },
   { path: '/projets', element: <ProjectsPage /> } // Français
 ];
 

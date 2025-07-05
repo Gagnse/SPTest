@@ -1,22 +1,38 @@
+// frontend/src/App.tsx
 import { useEffect } from 'react';
-import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
+import { BrowserRouter as Router, useRoutes, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import publicRoutes from './routes/publicRoutes';
-import Navbar from './components/Navbar'; // ✅ Ajout de la navbar
-import Footer from './components/Footer'; // ✅ Ajout du footer
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function RoutesWrapper() {
   const routing = useRoutes(publicRoutes);
-  return routing;
+  const location = useLocation();
+  
+  // Check if current route is a workspace route
+  const isWorkspaceRoute = location.pathname.startsWith('/workspace');
+  
+  return (
+    <>
+      {/* Only show main navbar on non-workspace pages */}
+      {!isWorkspaceRoute && <Navbar />}
+      
+      {/* Main content */}
+      {routing}
+      
+      {/* Only show footer on non-workspace pages */}
+      {!isWorkspaceRoute && <Footer />}
+    </>
+  );
 }
 
 function App() {
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/weatherforecast`)
       .then(res => {
-        console.log('Réponse de l’API :', res.data);
+        console.log("Réponse de l'API :", res.data);
       })
       .catch(err => {
         console.error('Erreur :', err);
@@ -25,9 +41,7 @@ function App() {
 
   return (
     <Router>
-      <Navbar />              {/* ✅ Navbar visible sur toutes les pages */}
-      <RoutesWrapper />       {/* ✅ Affiche le contenu des routes */}
-      <Footer />              {/* ✅ Footer visible sur toutes les pages */}
+      <RoutesWrapper />
     </Router>
   );
 }
