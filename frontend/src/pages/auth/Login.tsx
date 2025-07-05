@@ -38,7 +38,7 @@ const Login: React.FC = () => {
         
         // Redirect to projects page after a short delay
         setTimeout(() => {
-          window.location.href = '/workspace/projects';
+          window.location.href = '/workspace/myprojects';
         }, 1000);
       } else {
         setMessage({ type: 'error', text: response.data.message || t('errorMessage') });

@@ -37,7 +37,7 @@ const WorkspaceNavbar: React.FC = () => {
         <div className="workspace-navbar-left">
           {/* Logo */}
           <div className="workspace-logo">
-            <Link to="/workspace/projects">SpaceLogic</Link>
+            <Link to="/workspace/myprojects">SpaceLogic</Link>
           </div>
           
           {/* Navigation Items - Will be filled later */}
@@ -79,7 +79,7 @@ const WorkspaceNavbar: React.FC = () => {
           <div className="secondary-nav-items">
             <Link 
               to="/workspace/projects" 
-              className={`secondary-nav-item ${isActive('/workspace/projects') ? 'active' : ''}`}
+              className={`secondary-nav-item ${isActive('/workspace/myprojects') ? 'active' : ''}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
