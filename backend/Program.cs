@@ -106,6 +106,10 @@ builder.Services.AddDbContext<AdminDbContext>(options =>
     });
 });
 
+// Register Services
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 // ➕ JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? builder.Configuration["Jwt__Key"] ?? "your-secret-key-here-make-it-long-and-secure-fallback-key-for-development";
 Console.WriteLine($"JWT Key loaded: {(string.IsNullOrEmpty(jwtKey) ? "EMPTY" : "OK")}");
