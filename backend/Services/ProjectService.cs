@@ -7,6 +7,7 @@ using SpaceLogic.Data.Admin;
 using SpaceLogic.Data.Models.Admin;
 using backend.Models.DTOs.Project;
 
+
 namespace backend.Services
 {
     public class ProjectService : IProjectService
@@ -269,7 +270,7 @@ namespace backend.Services
                 {
                     ProjectId = projectId,
                     UserId = userId,
-                    AssignedAt = DateTime.UtcNow
+                    JoinedAt = DateTime.UtcNow
                 };
 
                 _context.ProjectUsers.Add(projectUser);

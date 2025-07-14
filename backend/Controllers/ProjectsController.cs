@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using backend.Models.DTOs.Project;
+using backend.Services.Interfaces;
 
 namespace backend.Controllers
 {

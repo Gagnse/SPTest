@@ -129,19 +129,19 @@ namespace backend.Services
             }
         }
 
-        public async Task<IResult<bool>> LogoutAsync(Guid userId)
+        public Task<IResult<bool>> LogoutAsync(Guid userId)
         {
             try
             {
                 // In a stateless JWT system, logout is typically handled client-side
                 // But we can log the logout event for audit purposes
                 _logger.LogInformation("User {UserId} logged out", userId);
-                return Result<bool>.Success(true);
+                return Task.FromResult<IResult<bool>>(Result<bool>.Success(true));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during logout for user {UserId}", userId);
-                return Result<bool>.Failure("Error during logout");
+                return Task.FromResult<IResult<bool>>(Result<bool>.Failure("Error during logout"));
             }
         }
 
