@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import WorkspaceNavbar from '../../components/WorkspaceNavbar';
 import axios from 'axios';
-import '../../styles/Workspace/workspace.css';
+import '../../styles/Workspace/Workspace.css';
 
 interface Project {
   id: string;

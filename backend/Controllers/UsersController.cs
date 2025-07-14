@@ -130,6 +130,9 @@ namespace backend.Controllers
                     return NotFound("Organization not found.");
                 }
 
+                // ✅ Generate the new JWT token BEFORE using it
+                var newToken = GenerateJwtToken(userWithOrg, newOrganization);
+
                 var userDto = new UserDto
                 {
                     Id = userWithOrg.Id,
@@ -143,8 +146,8 @@ namespace backend.Controllers
                     Location = userWithOrg.Location
                 };
 
-                // Set the token separately since it's not part of the original UserDto
-                Response.Headers.Add("Authorization", $"Bearer {newToken}");
+                // ✅ Fix: Use Response.Headers.Append instead of Add for better header handling
+                Response.Headers.Append("Authorization", $"Bearer {newToken}");
                 
                 return Ok(new { 
                     user = userDto, 
@@ -159,7 +162,6 @@ namespace backend.Controllers
                 return StatusCode(500, new { message = "Error switching organization." });
             }
         }
-
         // GET api/users/current
         [HttpGet("current")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()

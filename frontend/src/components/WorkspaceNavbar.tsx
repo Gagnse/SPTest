@@ -44,11 +44,11 @@ const NewWorkspaceNavbar: React.FC = () => {
       const userData = JSON.parse(userInfo);
       setUser(userData);
       
-      // Set current organization from user data
+      // ✅ Fix: Use undefined instead of null for optional properties
       setCurrentOrganization({ 
         id: userData.organizationId, 
         name: userData.organizationName || 'SpaceLogic',
-        logoUrl: null 
+        logoUrl: undefined // Changed from null to undefined
       });
       
       // Fetch user organizations from API
@@ -61,52 +61,18 @@ const NewWorkspaceNavbar: React.FC = () => {
       const token = localStorage.getItem('authToken');
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/users/${userId}/organizations`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       });
 
       if (response.ok) {
         const organizations = await response.json();
         setUserOrganizations(organizations);
-      } else {
-        console.error('Failed to fetch user organizations');
-        // Fallback to current organization only
-        if (currentOrganization) {
-          setUserOrganizations([currentOrganization]);
-        }
       }
     } catch (error) {
       console.error('Error fetching user organizations:', error);
-      // Fallback to current organization only
-      if (currentOrganization) {
-        setUserOrganizations([currentOrganization]);
-      }
     }
   };
-
-  // Handle clicks outside dropdowns
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (orgDropdownRef.current && !orgDropdownRef.current.contains(event.target as Node)) {
-        setOrgDropdownOpen(false);
-      }
-      if (pagesDropdownRef.current && !pagesDropdownRef.current.contains(event.target as Node)) {
-        setPagesDropdownOpen(false);
-      }
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
-        setProfileDropdownOpen(false);
-      }
-      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
-        setLanguageDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -137,10 +103,14 @@ const NewWorkspaceNavbar: React.FC = () => {
           localStorage.setItem('authToken', responseData.token);
         }
         
-        // Merge the organization info into user data for consistency
-        const mergedUserData = {
-          ...updatedUserData,
-          organizationId: responseData.organizationId || updatedUserData.organizationId,
+        // ✅ Fix: Ensure all required User properties are present
+        const mergedUserData: User = {
+          id: updatedUserData.id || user?.id || '',
+          firstName: updatedUserData.firstName || user?.firstName || '',
+          lastName: updatedUserData.lastName || user?.lastName || '',
+          email: updatedUserData.email || user?.email || '',
+          avatarUrl: updatedUserData.avatarUrl || user?.avatarUrl,
+          organizationId: responseData.organizationId || updatedUserData.organizationId || '',
           organizationName: responseData.organizationName || updatedUserData.organizationName
         };
         
@@ -177,7 +147,8 @@ const NewWorkspaceNavbar: React.FC = () => {
     { path: '/workspace/activities', label: 'Activities', icon: 'activity' },
   ];
 
-  const renderIcon = (iconName: string) => {
+  // ✅ Fix: Explicitly type the return value and fix the default case
+  const renderIcon = (iconName: string): React.ReactElement => {
     const iconProps = {
       width: "16",
       height: "16",
@@ -232,7 +203,12 @@ const NewWorkspaceNavbar: React.FC = () => {
           </svg>
         );
       default:
-        return null;
+        // ✅ Fix: Return a valid React element instead of null
+        return (
+          <svg {...iconProps}>
+            <circle cx="12" cy="12" r="1"></circle>
+          </svg>
+        );
     }
   };
 
