@@ -1,0 +1,46 @@
+{
+  "title": "Politique de confidentialité",
+  "lastUpdated": "Dernière mise à jour : 18 mars 2025",
+  "sections": {
+    "intro": {
+      "title": "Politique de Confidentialité",
+      "text": "Merci de consulter la Politique de Confidentialité de SpaceLogic. Cette Politique de Confidentialité explique comment nous collectons, utilisons et partageons des informations vous concernant lorsque vous accédez ou utilisez nos Services."
+    },
+    "collect": {
+      "title": "Informations que nous collectons",
+      "text": "Nous collectons des informations de contact, de compte et d’utilisation, notamment les adresses et les données fournies lors de la création d’un compte."
+    },
+    "use": {
+      "title": "Comment nous utilisons vos informations",
+      "text": "Nous utilisons vos informations pour améliorer les Services, traiter les transactions, répondre à vos demandes, et respecter nos obligations légales."
+    },
+    "share": {
+      "title": "Comment nous pouvons partager vos informations",
+      "text": "Nous partageons vos données avec des fournisseurs, en cas de changement d’activité, pour respecter la loi ou avec votre consentement."
+    },
+    "security": {
+      "title": "Sécurité des données",
+      "text": "Nous mettons en œuvre des mesures de sécurité raisonnables, mais aucune n’est totalement inviolable."
+    },
+    "retention": {
+      "title": "Conservation des données",
+      "text": "Nous conservons les données aussi longtemps que nécessaire pour les finalités décrites ou pour respecter nos obligations."
+    },
+    "age": {
+      "title": "Limites d’âge",
+      "text": "Nos Services sont destinés aux personnes de 18 ans et plus. Nous ne collectons pas sciemment d’informations auprès des enfants."
+    },
+    "changes": {
+      "title": "Modifications de cette politique",
+      "text": "Nous pouvons modifier cette politique. Les changements importants seront communiqués et l’utilisation continue des Services vaut acceptation."
+    },
+    "storage": {
+      "title": "Stockage des informations aux États-Unis",
+      "text": "Les informations peuvent être stockées aux États-Unis. En utilisant les Services, vous acceptez ce transfert de données."
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "text": "Pour toute question, contactez-nous à spacelogic.info@gmail.com."
+    }
+  }
+}

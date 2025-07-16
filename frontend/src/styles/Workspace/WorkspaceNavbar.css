@@ -1,0 +1,337 @@
+/* frontend/src/styles/Workspace/WorkspaceNavbar.css */
+
+.new-workspace-navbar {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.new-workspace-navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px; /* Reduced from 20px to 8px for less gap on sides */
+  height: 70px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Left side styles */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar-logo a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3498db;
+  text-decoration: none;
+}
+
+/* Right side styles */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Updated navbar buttons to be borderless */
+.navbar-button {
+  padding: 8px 12px;
+  color: #4a5568;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  border: none; /* Explicitly remove any borders */
+  background: transparent; /* Ensure transparent background */
+}
+
+.navbar-button:hover {
+  background-color: #f7fafc;
+  color: #2d3748;
+}
+
+.vertical-separator {
+  width: 1px;
+  height: 24px;
+  background-color: #e2e8f0;
+  margin: 0 8px;
+}
+
+/* Dropdown container styles */
+.dropdown-container {
+  position: relative;
+}
+
+/* Updated dropdown triggers to be borderless */
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: none; /* Remove border to make borderless */
+  border-radius: 6px;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.dropdown-trigger:hover {
+  background-color: #f7fafc;
+}
+
+.dropdown-trigger svg {
+  transition: transform 0.2s ease;
+}
+
+.dropdown-container[data-open="true"] .dropdown-trigger svg {
+  transform: rotate(180deg);
+}
+
+/* Language dropdown trigger - borderless */
+.language-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: transparent;
+  border: none; /* Remove border to make borderless */
+  border-radius: 6px;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-dropdown-trigger:hover {
+  background-color: #f7fafc;
+}
+
+/* Profile dropdown trigger - borderless with dropdown triangle */
+.profile-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 4px;
+  background-color: transparent;
+  border: none; /* Remove border to make borderless */
+  border-radius: 20px;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-dropdown-trigger:hover {
+  background-color: #f7fafc;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3498db;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-initials {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Dropdown menu styles */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+/* Profile dropdown positioning */
+.profile-dropdown {
+  right: 0;
+  left: auto;
+  min-width: 160px;
+}
+
+/* Language dropdown positioning */
+.language-dropdown {
+  right: 0;
+  left: auto;
+  min-width: 120px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  color: #4a5568;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f7fafc;
+  color: #2d3748;
+}
+
+.dropdown-item.active {
+  background-color: #e6f3ff;
+  color: #3498db;
+  font-weight: 500;
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .new-workspace-navbar-container {
+    padding: 0 6px; /* Reduced from 16px to 6px */
+  }
+  
+  .navbar-left {
+    gap: 16px;
+  }
+  
+  .navbar-right {
+    gap: 12px;
+  }
+  
+  .navbar-buttons {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-workspace-navbar-container {
+    height: 60px;
+    padding: 0 4px; /* Reduced from 12px to 4px */
+  }
+  
+  .navbar-logo a {
+    font-size: 1.3rem;
+  }
+  
+  .navbar-left {
+    gap: 12px;
+  }
+  
+  .navbar-right {
+    gap: 8px;
+  }
+  
+  .navbar-buttons {
+    display: none; /* Hide support buttons on mobile */
+  }
+  
+  .user-name {
+    display: none; /* Hide user name on mobile */
+  }
+  
+  .dropdown-trigger span {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-workspace-navbar-container {
+    height: 56px;
+    padding: 0 2px; /* Reduced from 8px to 2px */
+  }
+  
+  .navbar-left {
+    gap: 8px;
+  }
+  
+  .navbar-logo a {
+    font-size: 1.2rem;
+  }
+  
+  .dropdown-trigger {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .dropdown-trigger span {
+    max-width: 80px;
+  }
+  
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .dropdown-menu {
+    min-width: 180px;
+  }
+}
+
+/* Animation for dropdown opening */
+.dropdown-menu {
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

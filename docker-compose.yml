@@ -1,0 +1,52 @@
+services:
+  # Backend API (connects to Neon cloud database)
+  backend:
+    build: ./backend
+    container_name: spacelogic_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # PostgreSQL environment variables for Neon
+      - PGHOST=${PGHOST}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGSSLMODE=${PGSSLMODE}
+      # Connection strings as fallback
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - ConnectionStrings__AdminConnection=${ConnectionStrings__AdminConnection}
+      - Jwt__Key=${Jwt__Key}
+    env_file:
+      - .env
+    # Add DNS configuration for better external connectivity
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    networks:
+      - spacelogic_network
+    restart: unless-stopped
+
+  # Frontend React App
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: spacelogic_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - spacelogic_network
+    restart: unless-stopped
+
+# Network for service communication
+networks:
+  spacelogic_network:
+    driver: bridge
+    # Enable external connectivity
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"

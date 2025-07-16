@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Admin DB",
+      "Group": "Servers",
+      "Host": "admin-db",
+      "Port": 5432,
+      "MaintenanceDB": "spacelogic_admin_db",
+      "Username": "admin",
+      "SSLMode": "prefer"
+    }
+  }
+}

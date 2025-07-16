@@ -1,0 +1,234 @@
+/* frontend/src/styles/Workspace/Workspace.css */
+
+.updated-workspace-layout {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Workspace Content Layout - adjusted for single navbar */
+.updated-workspace-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 90px; /* Adjusted for single navbar height (70px + padding) */
+  min-height: calc(100vh - 110px);
+}
+
+/* Override existing workspace styles for consistency */
+.projects-container {
+  width: 100%;
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.projects-header h1 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin: 0;
+  font-weight: 600;
+}
+
+.projects-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 10px 15px 10px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 280px;
+  font-size: 0.9rem;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+}
+
+.create-project-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.create-project-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* Page-specific styles that work with the new navbar */
+.page-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.page-title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #718096;
+  margin-top: 4px;
+}
+
+/* Card styles for consistency */
+.workspace-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Table styles for administration pages */
+.workspace-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.workspace-table th {
+  background-color: #f7fafc;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.workspace-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f7fafc;
+  color: #2d3748;
+}
+
+.workspace-table tr:hover {
+  background-color: #f7fafc;
+}
+
+/* Button styles */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+  background-color: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .updated-workspace-content {
+    padding: 16px;
+    margin-top: 80px; /* Adjusted for mobile navbar height */
+  }
+  
+  .projects-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .projects-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .updated-workspace-content {
+    padding: 12px;
+    margin-top: 76px; /* Adjusted for small mobile navbar height */
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .workspace-card {
+    padding: 16px;
+  }
+  
+  .workspace-table th,
+  .workspace-table td {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
