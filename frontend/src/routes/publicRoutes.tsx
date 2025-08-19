@@ -1,3 +1,4 @@
+// frontend/src/routes/publicRoutes.tsx
 import Home from '../pages/Home';
 import About from '../pages/About';
 import Services from '../pages/Services';
@@ -6,6 +7,9 @@ import Login from '../pages/auth/Login';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import TermsOfService from '../pages/TermsOfService';
 import ProjectsPage from '../pages/workspace/ProjectsPage';
+import AdministrationPage from '../pages/workspace/AdministrationPage';
+import UsersPage from '../pages/workspace/UsersPage';
+import ActivitiesPage from '../pages/workspace/ActivitiesPage';
 
 const publicRoutes = [
   { path: '/', element: <Home /> },
@@ -15,8 +19,15 @@ const publicRoutes = [
   { path: '/login', element: <Login /> },
   { path: '/privacy', element: <PrivacyPolicy /> },
   { path: '/terms', element: <TermsOfService />},
+  
+  // Workspace routes
   { path: '/workspace/myprojects', element: <ProjectsPage /> },
-  { path: '/projets', element: <ProjectsPage /> } // Français
+  { path: '/workspace/administration', element: <AdministrationPage /> },
+  { path: '/workspace/users', element: <UsersPage /> },
+  { path: '/workspace/activities', element: <ActivitiesPage /> },
+  
+  // French routes
+  { path: '/projets', element: <ProjectsPage /> }
 ];
 
 export default publicRoutes;

@@ -232,3 +232,66 @@
     font-size: 0.9rem;
   }
 }
+
+/* Add these styles to your existing Workspace.css file */
+
+/* Status badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-active {
+  background-color: #c6f6d5;
+  color: #276749;
+}
+
+.status-inactive {
+  background-color: #fed7d7;
+  color: #c53030;
+}
+
+.status-pending {
+  background-color: #feebc8;
+  color: #c05621;
+}
+
+/* Form controls */
+.form-control {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: white;
+  transition: border-color 0.2s ease;
+  min-width: 120px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Responsive table improvements */
+@media (max-width: 768px) {
+  .workspace-table {
+    font-size: 0.8rem;
+  }
+  
+  .workspace-table th,
+  .workspace-table td {
+    padding: 8px 6px;
+  }
+  
+  .projects-actions {
+    flex-wrap: wrap;
+  }
+  
+  .form-control {
+    min-width: 100px;
+  }
+}

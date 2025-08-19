@@ -147,6 +147,11 @@ const WorkspaceNavbar: React.FC = () => {
     { path: '/workspace/activities', label: 'Activities', icon: 'activity' },
   ];
 
+  const getActivePageLabel = () => {
+    const activePage = workspacePages.find(page => page.path === location.pathname);
+    return activePage ? activePage.label : 'Workspace';
+  };
+
   // ✅ Fix: Explicitly type the return value and fix the default case
   const renderIcon = (iconName: string): React.ReactElement => {
     const iconProps = {
@@ -257,7 +262,7 @@ const WorkspaceNavbar: React.FC = () => {
               className="dropdown-trigger"
               onClick={() => setPagesDropdownOpen(!pagesDropdownOpen)}
             >
-              <span>Workspace</span>
+              <span>{getActivePageLabel()}</span>
               {renderIcon('chevron-down')}
             </button>
             {pagesDropdownOpen && (
