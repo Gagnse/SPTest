@@ -9,8 +9,8 @@ import Footer from './components/Footer';
 function RoutesWrapper() {
   const routing = useRoutes(publicRoutes);
   const location = useLocation();
-  const [isNavigating, setIsNavigating] = useState(false);
-  const [fadeOpacity, setFadeOpacity] = useState(1);
+  const [isNavigating] = useState(false);
+  const [fadeOpacity] = useState(1);
   
   // Check if current route is a workspace route
   const isWorkspaceRoute = location.pathname.startsWith('/workspace');
