@@ -1,5 +1,5 @@
 // frontend/src/App.tsx
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, useRoutes, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import publicRoutes from './routes/publicRoutes';
@@ -9,20 +9,40 @@ import Footer from './components/Footer';
 function RoutesWrapper() {
   const routing = useRoutes(publicRoutes);
   const location = useLocation();
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [fadeOpacity, setFadeOpacity] = useState(1);
   
   // Check if current route is a workspace route
   const isWorkspaceRoute = location.pathname.startsWith('/workspace');
   
   return (
     <>
-      {/* Only show main navbar on non-workspace pages */}
-      {!isWorkspaceRoute && <Navbar />}
+      {/* Main navbar with smooth fade */}
+      <div style={{ 
+        opacity: (!isWorkspaceRoute && !isNavigating) ? fadeOpacity : 0,
+        transition: 'opacity 0.15s ease-in-out'
+      }}>
+        {!isWorkspaceRoute && <Navbar key="main-navbar" />}
+      </div>
       
-      {/* Main content */}
-      {routing}
+      {/* Main content with smooth fade */}
+      <div 
+        key={location.pathname}
+        style={{ 
+          opacity: fadeOpacity,
+          transition: 'opacity 0.15s ease-in-out'
+        }}
+      >
+        {routing}
+      </div>
       
-      {/* Only show footer on non-workspace pages */}
-      {!isWorkspaceRoute && <Footer />}
+      {/* Footer with smooth fade */}
+      <div style={{ 
+        opacity: (!isWorkspaceRoute && !isNavigating) ? fadeOpacity : 0,
+        transition: 'opacity 0.15s ease-in-out'
+      }}>
+        {!isWorkspaceRoute && <Footer key="main-footer" />}
+      </div>
     </>
   );
 }

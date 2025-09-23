@@ -2,5 +2,15 @@
   "title": "Services offerts",
   "intro": "Nous offrons une plateforme d'hébergement pour vos projets architecturaux où vous pourrez retrouver tous les projets auxquels vous participez.",
   "softwareTitle": "Notre logiciel",
-  "softwareText": "Lorsque vous sélectionnerez un projet, vous y retrouverez chaque pièce et chacune contiendra les attributs nécessaires, tel que les portes, les cloisons, la finition et autres. Chaque élément d'un projet est accompagné d'un espace commentaire pour laisser au client le pouvoir de laisser ses avis. De plus, pour éviter que n'importe qui se joigne à n'importe quel projet, il n'y aura que les administrateurs des organisations qui pourront inviter les personnes concernées sur le projet."
+  "softwareText": "Lorsque vous sélectionnerez un projet, vous y retrouverez chaque pièce et chacune contiendra les attributs nécessaires, tel que les portes, les cloisons, la finition et autres. Chaque élément d'un projet est accompagné d'un espace commentaire pour laisser au client le pouvoir de laisser ses avis. De plus, pour éviter que n'importe qui se joigne à n'importe quel projet, il n'y aura que les administrateurs des organisations qui pourront inviter les personnes concernées sur le projet.",
+  "softwareTag": "Logiciel",
+  "implementationTag": "Implantation",
+  "deploymentTitle": "Déploiement",
+  "deploymentText": "Nous déployons, connectons et alignons avec votre stack manufacturier/logistique.",
+  "consultingTag": "Conseil",
+  "advisoryTitle": "Conseil stratégique",
+  "advisoryText": "Plans directeurs, processus et gouvernance pour des opérations à l'échelle.",
+  "integrationTag": "Intégration",
+  "systemsTitle": "Systèmes",
+  "systemsText": "Des APIs et pipelines de données pour faire dialoguer architecture et logistique."
 }

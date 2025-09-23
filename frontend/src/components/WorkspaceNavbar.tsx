@@ -1,7 +1,9 @@
 // frontend/src/components/WorkspaceNavbar.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import '../styles/Workspace/WorkspaceNavbar.css';
+import { useTranslation } from 'react-i18next';
+import logo from './brand/SLSimple.svg';
+import '../styles/Workspace/workspaceNavbar.css';
 
 interface User {
   id: string;
@@ -21,6 +23,7 @@ interface Organization {
 
 const WorkspaceNavbar: React.FC = () => {
   const location = useLocation();
+  const { t } = useTranslation('common');
   const [user, setUser] = useState<User | null>(null);
   const [userOrganizations, setUserOrganizations] = useState<Organization[]>([]);
   const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
@@ -141,10 +144,10 @@ const WorkspaceNavbar: React.FC = () => {
   };
 
   const workspacePages = [
-    { path: '/workspace/myprojects', label: 'My projects', icon: 'folder' },
-    { path: '/workspace/administration', label: 'Administration', icon: 'settings' },
-    { path: '/workspace/users', label: 'Users and permissions', icon: 'users' },
-    { path: '/workspace/activities', label: 'Activities', icon: 'activity' },
+    { path: '/workspace/myprojects', label: t('workspace.myProjects'), icon: 'folder' },
+    { path: '/workspace/administration', label: t('workspace.administration'), icon: 'settings' },
+    { path: '/workspace/users', label: t('workspace.usersAndPermissions'), icon: 'users' },
+    { path: '/workspace/activities', label: t('workspace.activities'), icon: 'activity' },
   ];
 
   const getActivePageLabel = () => {
@@ -228,17 +231,20 @@ const WorkspaceNavbar: React.FC = () => {
         {/* Left side */}
         <div className="navbar-left">
           {/* Logo */}
-          <div className="navbar-logo">
-            <Link to="/workspace/myprojects">SpaceLogic</Link>
+          <div className="navbar-logo h-full">
+            <Link to="/workspace/myprojects" className="logo-link" aria-label="SpaceLogic Home">
+              <div className="logo-box h-full py-3">
+                <img src={logo} alt="SpaceLogic" className="brand-logo-img h-full" />
+              </div>
+            </Link>
           </div>
-
           {/* Organization Dropdown */}
           <div className="dropdown-container" ref={orgDropdownRef}>
             <button 
               className="dropdown-trigger"
               onClick={() => setOrgDropdownOpen(!orgDropdownOpen)}
             >
-              <span>{currentOrganization?.name || 'Select Organization'}</span>
+              <span>{currentOrganization?.name || t('workspace.selectOrganization')}</span>
               {renderIcon('chevron-down')}
             </button>
             {orgDropdownOpen && (
@@ -286,11 +292,7 @@ const WorkspaceNavbar: React.FC = () => {
         {/* Right side */}
         <div className="navbar-right">
           {/* Support, Contact, What's new buttons */}
-          <div className="navbar-buttons">
-            <Link to="/support" className="navbar-button">Support</Link>
-            <Link to="/contact" className="navbar-button">Contact</Link>
-            <Link to="/whats-new" className="navbar-button">What's new</Link>
-          </div>
+
 
           {/* Language Dropdown */}
           <div className="dropdown-container" ref={languageDropdownRef}>
@@ -307,13 +309,13 @@ const WorkspaceNavbar: React.FC = () => {
                   className={`dropdown-item ${currentLanguage === 'FR' ? 'active' : ''}`}
                   onClick={() => switchLanguage('FR')}
                 >
-                  Français
+                  {t('language.french')}
                 </div>
                 <div
                   className={`dropdown-item ${currentLanguage === 'EN' ? 'active' : ''}`}
                   onClick={() => switchLanguage('EN')}
                 >
-                  English
+                  {t('language.english')}
                 </div>
               </div>
             )}
@@ -345,13 +347,13 @@ const WorkspaceNavbar: React.FC = () => {
                   className="dropdown-item"
                   onClick={() => setProfileDropdownOpen(false)}
                 >
-                  My profile
+                  {t('profile.myProfile')}
                 </Link>
                 <div
                   className="dropdown-item"
                   onClick={handleLogout}
                 >
-                  Sign out
+                  {t('profile.signOut')}
                 </div>
               </div>
             )}

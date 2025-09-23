@@ -13,6 +13,13 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    // Prevent any async/placeholder flashes
+    initImmediate: false,
+    returnObjects: false,
+    keySeparator: '.',
+    react: {
+      useSuspense: false,
+    },
   });
 
 export default i18n;

@@ -2,19 +2,34 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation('home');
 
+  const handleGetStarted = () => {
+    // Navigate to the proper workspace projects route
+    navigate('/workspace/myprojects');
+  };
+
+  const handleServices = () => {
+    navigate('/services');
+  };
+
+  const handleLearnMore = () => {
+    navigate('/about');
+  };
+
   return (
     <div>
       {/* Hero Section */}
-      <section className="parallax-hero">
+      <section className="parallax-hero pattern-grid-invert">
         <div className="hero-content">
-          <h1>{t('title')}</h1>
+          <h1 className="home-title">{t('title')}</h1>
+          <div className="accent-bar" style={{ margin: '12px auto 20px', width: '120px' }}></div>
           <p>{t('description1')}</p>
           <p>{t('description2')}</p>
-          <button className="cta-button" onClick={() => navigate('/projets')}>
+          <button className="cta-button" onClick={handleGetStarted}>
             {t('buttons.getStarted')}
           </button>
         </div>
@@ -26,7 +41,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="features">
+      <section className="features brand-surface">
         <div className="features-container">
           <h2>{t('featuresTitle')}</h2>
           <div className="feature-grid">
@@ -37,7 +52,7 @@ const Home: React.FC = () => {
               ['features.subscription'],
               ['features.comments']
             ].map(([key]) => (
-              <div key={key} className="feature-card">
+              <div key={key} className="feature-card card-hover">
                 <h3>{t(`${key}.title`)}</h3>
                 <p>{t(`${key}.desc`)}</p>
               </div>
@@ -51,9 +66,10 @@ const Home: React.FC = () => {
         <div className="parallax-bg"></div>
         <div className="parallax-content">
           <h2>{t('whyTitle')}</h2>
+          <div className="accent-bar" style={{ margin: '8px auto 16px', width: '100px' }}></div>
           <p>- {t('why1')}</p>
           <p>- {t('why2')}</p>
-          <button className="cta-button" onClick={() => navigate('/services')}>
+          <button className="cta-button" onClick={handleServices}>
             {t('buttons.services')}
           </button>
         </div>
@@ -69,7 +85,7 @@ const Home: React.FC = () => {
             {t('team.1')} <br />
             {t('team.2')} <br />
           </p>
-          <button className="cta-button" onClick={() => navigate('/about')}>
+          <button className="cta-button" onClick={handleLearnMore}>
             {t('buttons.learnMore')}
           </button>
         </div>

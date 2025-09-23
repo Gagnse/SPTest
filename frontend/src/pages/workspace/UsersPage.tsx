@@ -1,7 +1,7 @@
 // frontend/src/pages/workspace/UsersPage.tsx
 import React, { useState } from 'react';
 import WorkspaceNavbar from '../../components/WorkspaceNavbar';
-import '../../styles/Workspace/Workspace.css';
+import '../../styles/Workspace/workspace.css';
 
 interface User {
   id: string;

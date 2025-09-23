@@ -4,11 +4,24 @@
     "about": "About",
     "services": "Services",
     "contact": "Contact",
-    "login": "Log In"
+    "login": "Login",
+    "support": "Support",
+    "whatsNew": "What's new"
   },
-  "footer": {
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Spacelogic. All rights reserved."
+  "language": {
+    "french": "Français",
+    "english": "English"
+  },
+  "profile": {
+    "myProfile": "My profile",
+    "signOut": "Sign out"
+  },
+  "workspace": {
+    "myProjects": "My projects",
+    "administration": "Administration",
+    "usersAndPermissions": "Users and permissions",
+    "activities": "Activities",
+    "selectOrganization": "Select Organization",
+    "loadingProjects": "Loading projects..."
   }
 }

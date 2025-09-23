@@ -1,8 +1,9 @@
 // frontend/src/pages/workspace/ProjectsPage.tsx
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import WorkspaceNavbar from '../../components/WorkspaceNavbar';
 import axios from 'axios';
-import '../../styles/Workspace/Workspace.css';
+import '../../styles/Workspace/workspace.css';
 
 interface Project {
   id: string;
@@ -18,6 +19,7 @@ interface Project {
 }
 
 const ProjectsPage: React.FC = () => {
+  const { t } = useTranslation('common');
   const [activeTab, setActiveTab] = useState<'active' | 'archive'>('active');
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -161,7 +163,7 @@ const ProjectsPage: React.FC = () => {
         <div className="workspace-content">
           <div className="loading-container">
             <div className="loading-spinner"></div>
-            <p>Chargement des projets...</p>
+            <p>{t('workspace.loadingProjects')}</p>
           </div>
         </div>
       </>

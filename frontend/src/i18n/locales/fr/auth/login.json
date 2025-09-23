@@ -3,6 +3,7 @@
   "email": "Email",
   "password": "Mot de passe",
   "submit": "Se connecter",
+  "forgotPassword": "Mot de passe oublié ?",
   "signupPrompt": "Pas encore de compte ?",
   "signupLink": "S'inscrire",
   "successMessage": "Connexion réussie !",

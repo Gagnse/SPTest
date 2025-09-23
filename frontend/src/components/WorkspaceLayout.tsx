@@ -1,7 +1,7 @@
 // frontend/src/components/UpdatedWorkspaceLayout.tsx
 import React from 'react';
 import WorkspaceNavbar from './WorkspaceNavbar';
-import '../styles/Workspace/Workspace.css';
+import '../styles/Workspace/workspace.css';
 
 interface UpdatedWorkspaceLayoutProps {
   children: React.ReactNode;

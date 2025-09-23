@@ -1,7 +1,7 @@
 // frontend/src/pages/workspace/ActivitiesPage.tsx
 import React, { useState } from 'react';
 import WorkspaceNavbar from '../../components/WorkspaceNavbar';
-import '../../styles/Workspace/Workspace.css';
+import '../../styles/Workspace/workspace.css';
 
 interface Activity {
   id: string;

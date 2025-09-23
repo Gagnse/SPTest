@@ -1,7 +1,7 @@
 // frontend/src/pages/workspace/AdministrationPage.tsx
 import React from 'react';
 import WorkspaceNavbar from '../../components/WorkspaceNavbar';
-import '../../styles/Workspace/Workspace.css';
+import '../../styles/Workspace/workspace.css';
 
 const AdministrationPage: React.FC = () => {
   return (
