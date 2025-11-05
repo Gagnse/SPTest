@@ -13,9 +13,6 @@ services:
       - PGUSER=${PGUSER}
       - PGPASSWORD=${PGPASSWORD}
       - PGSSLMODE=${PGSSLMODE}
-      # Connection strings as fallback
-      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
-      - ConnectionStrings__AdminConnection=${ConnectionStrings__AdminConnection}
       - Jwt__Key=${Jwt__Key}
     env_file:
       - .env
