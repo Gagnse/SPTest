@@ -1,269 +1,153 @@
-// backend/Controllers/UsersController.cs
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SpaceLogic.Data.Admin;
-using SpaceLogic.Data.Models.Admin;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using backend.Models.DTOs.User;
-
+using backend.Services.Interfaces;
 
 namespace backend.Controllers
 {
+    /// <summary>
+    /// Manages user accounts and profiles
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
-        private readonly AdminDbContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(AdminDbContext context, IConfiguration configuration)
+        public UsersController(
+            IUserService userService,
+            ILogger<UsersController> logger)
         {
-            _context = context;
-            _configuration = configuration;
+            _userService = userService;
+            _logger = logger;
         }
 
-        // GET api/users/{userId}/organizations
-        [HttpGet("{userId}/organizations")]
-        public async Task<ActionResult<IEnumerable<OrganizationDto>>> GetUserOrganizations(Guid userId)
+        /// <summary>
+        /// Get all users in organization with filtering and pagination
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult> GetAllUsers([FromQuery] UserFilterDto filters)
         {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                
-                // Only allow users to get their own organizations or if they are admin
-                if (currentUserId != userId && !IsAdminUser())
-                {
-                    return Forbid();
-                }
-
-                var organizations = await _context.OrganizationUsers
-                    .Where(ou => ou.UserId == userId)
-                    .Include(ou => ou.Organization)
-                    .Select(ou => new OrganizationDto
-                    {
-                        Id = ou.Organization!.Id,
-                        Name = ou.Organization.Name,
-                        LogoUrl = ou.Organization.LogoUrl,
-                        IsActive = ou.Organization.IsActive,
-                        JoinedAt = ou.JoinedAt
-                    })
-                    .Where(o => o.IsActive) // Only return active organizations
-                    .OrderBy(o => o.Name)
-                    .ToListAsync();
-
-                // If user has no organization relationships through OrganizationUser table,
-                // fallback to their primary organization from Users table
-                if (!organizations.Any())
-                {
-                    var user = await _context.Users
-                        .Include(u => u.Organization)
-                        .FirstOrDefaultAsync(u => u.Id == userId);
-
-                    if (user?.Organization != null)
-                    {
-                        organizations = new List<OrganizationDto>
-                        {
-                            new OrganizationDto
-                            {
-                                Id = user.Organization.Id,
-                                Name = user.Organization.Name,
-                                LogoUrl = user.Organization.LogoUrl,
-                                IsActive = user.Organization.IsActive,
-                                JoinedAt = user.CreatedAt
-                            }
-                        };
-                    }
-                }
-
-                return Ok(organizations);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving user organizations: {ex.Message}");
-                return StatusCode(500, new { message = "Error retrieving user organizations." });
-            }
-        }
-
-        // POST api/users/switch-organization
-        [HttpPost("switch-organization")]
-        public async Task<ActionResult<UserDto>> SwitchOrganization([FromBody] SwitchOrganizationRequest request)
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-
-                // Verify user has access to the organization
-                var hasAccess = await _context.OrganizationUsers
-                    .AnyAsync(ou => ou.UserId == currentUserId && ou.OrganizationId == request.OrganizationId);
-
-                if (!hasAccess)
-                {
-                    // Check if it's their primary organization
-                    var user = await _context.Users
-                        .FirstOrDefaultAsync(u => u.Id == currentUserId && u.OrganizationId == request.OrganizationId);
-                    
-                    if (user == null)
-                    {
-                        return Forbid("You don't have access to this organization.");
-                    }
-                }
-
-                // Get user with new organization context
-                var userWithOrg = await _context.Users
-                    .Include(u => u.Organization)
-                    .FirstOrDefaultAsync(u => u.Id == currentUserId);
-
-                if (userWithOrg == null)
-                {
-                    return NotFound("User not found.");
-                }
-
-                // Get the new organization
-                var newOrganization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Id == request.OrganizationId);
-
-                if (newOrganization == null)
-                {
-                    return NotFound("Organization not found.");
-                }
-
-                // ✅ Generate the new JWT token BEFORE using it
-                var newToken = GenerateJwtToken(userWithOrg, newOrganization);
-
-                var userDto = new UserDto
-                {
-                    Id = userWithOrg.Id,
-                    FirstName = userWithOrg.FirstName,
-                    LastName = userWithOrg.LastName,
-                    Email = userWithOrg.Email,
-                    OrganizationId = newOrganization.Id,
-                    OrganizationName = newOrganization.Name,
-                    Role = userWithOrg.OrgRole,
-                    Department = userWithOrg.Department,
-                    Location = userWithOrg.Location
-                };
-
-                // ✅ Fix: Use Response.Headers.Append instead of Add for better header handling
-                Response.Headers.Append("Authorization", $"Bearer {newToken}");
-                
-                return Ok(new { 
-                    user = userDto, 
-                    token = newToken,
-                    organizationId = newOrganization.Id,
-                    organizationName = newOrganization.Name
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error switching organization: {ex.Message}");
-                return StatusCode(500, new { message = "Error switching organization." });
-            }
-        }
-        // GET api/users/current
-        [HttpGet("current")]
-        public async Task<ActionResult<UserDto>> GetCurrentUser()
-        {
-            try
-            {
-                var userId = GetCurrentUserId();
-                var user = await _context.Users
-                    .Include(u => u.Organization)
-                    .FirstOrDefaultAsync(u => u.Id == userId);
-
-                if (user == null)
-                {
-                    return NotFound("User not found.");
-                }
-
-                var userDto = new UserDto
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    OrganizationId = user.OrganizationId,
-                    OrganizationName = user.Organization?.Name,
-                    Role = user.OrgRole,
-                    Department = user.Department,
-                    Location = user.Location
-                };
-
-                return Ok(userDto);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving current user: {ex.Message}");
-                return StatusCode(500, new { message = "Error retrieving current user." });
-            }
-        }
-
-        // Helper methods
-        private Guid GetCurrentUserId()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return Guid.TryParse(userIdClaim, out var userId) ? userId : Guid.Empty;
-        }
-
-        private Guid GetCurrentUserOrganizationId()
-        {
-            var orgIdClaim = User.FindFirst("OrganizationId")?.Value;
-            return Guid.TryParse(orgIdClaim, out var orgId) ? orgId : Guid.Empty;
-        }
-
-        private bool IsAdminUser()
-        {
-            var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
-            return roleClaim == "Admin" || roleClaim == "SuperAdmin";
-        }
-
-        private string GenerateJwtToken(User user, Organization organization)
-        {
-            var jwtKey = _configuration["Jwt:Key"];
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                throw new InvalidOperationException("JWT Key is not configured.");
-            }
+            // TODO: Phase 4 - Add [Permission("users", "read")] attribute
+            var organizationId = GetCurrentUserOrganizationId();
             
-            var key = Encoding.ASCII.GetBytes(jwtKey);
+            _logger.LogInformation(
+                "Getting users for organization {OrgId} with filters", 
+                organizationId);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                    new Claim("OrganizationId", organization.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.OrgRole ?? "User")
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var result = await _userService.GetAllUsersAsync(organizationId, filters);
+            return HandleServiceResult(result);
         }
-    }
 
-    // DTOs
-    public class OrganizationDto
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? LogoUrl { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime JoinedAt { get; set; }
-    }
+        /// <summary>
+        /// Get user by ID
+        /// </summary>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetUserById([FromRoute] Guid id)
+        {
+            // TODO: Phase 4 - Add [Permission("users", "read")] attribute
+            var organizationId = GetCurrentUserOrganizationId();
+            
+            _logger.LogInformation(
+                "Getting user {UserId} for organization {OrgId}", 
+                id, organizationId);
 
-    public class SwitchOrganizationRequest
-    {
-        public Guid OrganizationId { get; set; }
+            var result = await _userService.GetUserByIdAsync(id, organizationId);
+            return HandleServiceResult(result);
+        }
+
+        /// <summary>
+        /// Update user profile
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateUser(
+            [FromRoute] Guid id, 
+            [FromBody] UpdateUserRequest request)
+        {
+            // TODO: Phase 4 - Add [Permission("users", "update")] attribute
+            // Users can update their own profile, admins can update any user
+            var currentUserId = GetCurrentUserId();
+            var organizationId = GetCurrentUserOrganizationId();
+            
+            _logger.LogInformation(
+                "User {CurrentUserId} updating user {UserId}", 
+                currentUserId, id);
+
+            var result = await _userService.UpdateUserAsync(id, request, organizationId);
+            return HandleServiceResult(result);
+        }
+
+        /// <summary>
+        /// Soft delete user (deactivate)
+        /// </summary>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeactivateUser([FromRoute] Guid id)
+        {
+            // TODO: Phase 4 - Add [Permission("users", "delete")] attribute
+            var currentUserId = GetCurrentUserId();
+            var organizationId = GetCurrentUserOrganizationId();
+            
+            _logger.LogInformation(
+                "User {CurrentUserId} deactivating user {UserId}", 
+                currentUserId, id);
+
+            var result = await _userService.DeactivateUserAsync(id, organizationId);
+            return HandleServiceResult(result, "User deactivated successfully");
+        }
+
+        /// <summary>
+        /// Permanently delete user (admin only)
+        /// </summary>
+        [HttpDelete("{id}/permanent")]
+        public async Task<ActionResult> HardDeleteUser([FromRoute] Guid id)
+        {
+            // TODO: Phase 4 - Add [Permission("users", "hard_delete")] attribute (superadmin only)
+            var currentUserId = GetCurrentUserId();
+            var organizationId = GetCurrentUserOrganizationId();
+            
+            _logger.LogWarning(
+                "User {CurrentUserId} permanently deleting user {UserId}", 
+                currentUserId, id);
+
+            var result = await _userService.HardDeleteUserAsync(id, organizationId);
+            return HandleServiceResult(result, "User permanently deleted");
+        }
+
+        /// <summary>
+        /// Reactivate soft-deleted user
+        /// </summary>
+        [HttpPost("{id}/activate")]
+        public async Task<ActionResult> ActivateUser([FromRoute] Guid id)
+        {
+            // TODO: Phase 4 - Add [Permission("users", "activate")] attribute
+            var currentUserId = GetCurrentUserId();
+            var organizationId = GetCurrentUserOrganizationId();
+            
+            _logger.LogInformation(
+                "User {CurrentUserId} reactivating user {UserId}", 
+                currentUserId, id);
+
+            var result = await _userService.ActivateUserAsync(id, organizationId);
+            return HandleServiceResult(result, "User reactivated successfully");
+        }
+
+        /// <summary>
+        /// Get user's effective permissions
+        /// </summary>
+        [HttpGet("{id}/permissions")]
+        public async Task<ActionResult> GetUserPermissions([FromRoute] Guid id)
+        {
+            // TODO: Phase 4 - Add [Permission("users", "read")] attribute
+            var organizationId = GetCurrentUserOrganizationId();
+            
+            _logger.LogInformation(
+                "Getting permissions for user {UserId}", 
+                id);
+
+            var result = await _userService.GetUserPermissionsAsync(id, organizationId);
+            return HandleServiceResult(result);
+        }
     }
 }
