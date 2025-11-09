@@ -28,6 +28,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // ➕ Enregistre AppDbContext pour la base admin
 var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 var adminConnection = builder.Configuration.GetConnectionString("AdminConnection");
@@ -112,6 +113,12 @@ builder.Services.AddDbContext<AdminDbContext>(options =>
 // Register Services
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IInvitationService, InvitationService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 // ➕ JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? builder.Configuration["Jwt__Key"] ?? "your-secret-key-here-make-it-long-and-secure-fallback-key-for-development";

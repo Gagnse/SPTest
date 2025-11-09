@@ -1,5 +1,3 @@
-
-// backend/Models/DTOs/Organization/OrganizationDto.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models.DTOs.Organization
@@ -106,6 +104,13 @@ namespace backend.Models.DTOs.Organization
 
         [Range(1, 30, ErrorMessage = "Expiry days must be between 1 and 30")]
         public int ExpiryDays { get; set; } = 7;
+
+        // ⭐ ADDED: Department and Location fields
+        [StringLength(100, ErrorMessage = "Department cannot exceed 100 characters")]
+        public string? Department { get; set; }
+
+        [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters")]
+        public string? Location { get; set; }
     }
 
     public class AcceptInvitationRequest
@@ -136,24 +141,5 @@ namespace backend.Models.DTOs.Organization
         public int ActiveProjects { get; set; }
         public int CompletedProjects { get; set; }
         public DateTime? LastActivityDate { get; set; }
-        public IEnumerable<UserRoleStatsDto> UsersByRole { get; set; } = new List<UserRoleStatsDto>();
-        public IEnumerable<MonthlyStatsDto> MonthlyActivity { get; set; } = new List<MonthlyStatsDto>();
-    }
-
-    public class UserRoleStatsDto
-    {
-        public string Role { get; set; } = string.Empty;
-        public int Count { get; set; }
-        public decimal Percentage { get; set; }
-    }
-
-    public class MonthlyStatsDto
-    {
-        public int Year { get; set; }
-        public int Month { get; set; }
-        public string MonthName { get; set; } = string.Empty;
-        public int NewUsers { get; set; }
-        public int NewProjects { get; set; }
-        public int CompletedProjects { get; set; }
     }
 }

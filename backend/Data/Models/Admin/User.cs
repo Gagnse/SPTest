@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SpaceLogic.Data.Models.Admin
 {
-    [Table("users")] // If your table name is lowercase
+    [Table("users")]
     public class User
     {
         [Column("id")]
@@ -52,14 +52,17 @@ namespace SpaceLogic.Data.Models.Admin
         [Column("is_active")]
         public bool IsActive { get; set; }
 
-        // Navigation vers l'organisation
+        [Column("deleted_at")]
+        public DateTime? DeletedAt { get; set; }
+
+        // Navigation properties
         public Organization? Organization { get; set; }
-
-        // Navigation inverse pour les rôles, projets, etc.
         public ICollection<UserOrganizationRole>? OrganizationRoles { get; set; }
-
         public ICollection<ProjectUser>? ProjectAssignments { get; set; }
-
         public ICollection<OrganizationInvitation>? SentInvitations { get; set; }
+        public ICollection<EmailToken>? EmailTokens { get; set; }
+
+        // Computed properties
+        public bool IsDeleted => DeletedAt.HasValue;
     }
 }
